@@ -1,0 +1,42 @@
+webring-element {
+  .ring-info,
+  .ring-body {
+    margin: 0;
+    text-align: center;
+  }
+
+  .ring-info {
+    font-size: 0.75em;
+  }
+
+  &[data-ring-name=""] > .ring-info {
+    display: none;
+  }
+
+  .ring-body {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+
+    a.left::before,
+    a.right::after {
+      font-size: 1.5em;
+      line-height: 0;
+    }
+
+    a.left {
+      justify-self: self-start;
+    }
+
+    a.left::before {
+      content: "←";
+    }
+
+    a.right {
+      justify-self: self-end;
+    }
+
+    a.right::after {
+      content: "→";
+    }
+  }
+}

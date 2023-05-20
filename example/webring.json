@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "name": "acmRing",
+  "ring": [
+    {
+      "name": "peekoe",
+      "link": "peekoe.net"
+    },
+    {
+      "name": "diamond",
+      "link": "libdb.so"
+    },
+    {
+      "name": "aaronlieb",
+      "link": "lieber.men"
+    },
+    {
+      "name": "etok",
+      "link": "etok.codes"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" />
+<link rel="stylesheet" href="/dist/webring.css" />
+<script src="/dist/webring.js" type="module" async></script>
+
+<title>diamond's page</title>
+
+<header>
+  <h1>diamond's page</h1>
+</header>
+
+<main>
+  <p>Hi!</p>
+</main>
+
+<footer>
+  <webring-element
+    name="diamond"
+    src="webring.json"
+    exclude-missing-webring-sites
+  />
+</footer>
+
+<style>
+  html,
+  body {
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  footer {
+    border-top: 1px solid #ccc;
+  }
+
+  a {
+    border-bottom: 2px solid transparent;
+    &:hover {
+      border-color: #4d4d4d;
+    }
+  }
+
+  .ring-body {
+    line-height: 1.15;
+  }
+</style>
