@@ -18,7 +18,22 @@ A tiny JavaScript library for adding a webring to your website.
 
 ## Usage
 
-Add the script tag to your place. You may choose to use something like [jsdelivr](https://jsdelivr.com/) for this.
+Add the script tag to your place. You may choose to use something like [jsdelivr](https://jsdelivr.com/) for this:
+
+```html
+<script
+  src="https://cdn.jsdelivr.net/gh/diamondburned/libwebring/dist/webring.js"
+  type="module"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/diamondburned/libwebring/dist/webring.css"
+/>
+```
+
+**Note**: `type="module"` is required. `webring.js` is a module. Consequently, it might not work on older browsers.
+
+**Note**: It's generally a good idea to use a specific version instead of `latest`. For now, there might not yet be a stable version, so you can use `main` instead.
 
 Then, add the `<webring-element>` tag:
 
