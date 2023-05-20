@@ -31,5 +31,6 @@ jobs:
           push_options: --force
           skip_fetch: true
           skip_checkout: true
+          skip_dirty_check: true
           create_branch: true
           commit_message: Build nightly to ${{ github.sha }}
