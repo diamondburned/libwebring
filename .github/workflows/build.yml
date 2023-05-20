@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Install Nix dependencies
+        uses: diamondburned/cache-install@main
+        with:
+          shell-file: shell.nix
+          auto-optimise: true
+
+      - name: Build
+        run: rm -rf dist && ./build.ts
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
