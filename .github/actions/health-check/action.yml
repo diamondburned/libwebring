@@ -1,0 +1,33 @@
+name: Update webring status
+
+inputs:
+  webring-input:
+    default: webring.json
+  status-output:
+    default: "" # webring.json -> webring.status.json
+  commit:
+    default: false
+  commit-message:
+    default: "Update webring status file"
+
+runs:
+  using: composite
+  steps:
+    - name: Install Nix dependencies
+      uses: diamondburned/cache-install@main
+      with:
+        shell-file: shell.nix
+        auto-optimise: true
+
+    - name: Run health check
+      shell: bash
+      run: |
+        ./cmd/health-check.ts \
+          -i ${{ inputs.webring-input }} \
+          -o ${{ inputs.status-output }}
+
+    - name: Commit changes
+      if: ${{ inputs.commit }}
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: ${{ inputs.commit-message }}

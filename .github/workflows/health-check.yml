@@ -1,0 +1,14 @@
+name: Health check
+
+on: push
+
+jobs:
+  health-check:
+    name: Health check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/health-check
+        with:
+          webring-input: example/webring.json
+          commit: true
