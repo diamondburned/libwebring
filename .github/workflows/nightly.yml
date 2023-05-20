@@ -28,13 +28,15 @@ jobs:
       - name: Pack dist
         run: tar -czf dist.tar.gz dist
 
-      - name: Release Nightly
-        uses: softprops/action-gh-release@v1
+      - name: Update Nightly release
+        uses: andelf/nightly-release@ce2d0a30db8cf9f3920a4237d6a0b874400710c1
         with:
-          files: dist.tar.gz
-          fail_on_unmatched_files: true
-          name: Nightly
+          name: Nightly Release
           body: |
             This is a nightly release of libwebring. It is built from the latest
             commit on the `main` branch.
+          tag_name: nightly
           prerelease: true
+          files: dist.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
