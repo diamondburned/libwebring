@@ -13,7 +13,6 @@ export type WebringLink = {
 export type WebringStatusData = {
   readonly version: 1;
   anomalies: Record<string, WebringLinkStatus>;
-  lastUpdated: string; // RFC3339
 };
 
 export type WebringLinkStatus = {

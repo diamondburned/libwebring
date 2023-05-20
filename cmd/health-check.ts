@@ -79,7 +79,6 @@ for (const [i, link] of data.ring.entries()) {
 const statusData: WebringStatusData = {
   version: 1,
   anomalies,
-  lastUpdated: new Date().toISOString(),
 };
 
 const statusFile = JSON.stringify(statusData, null, 2);
