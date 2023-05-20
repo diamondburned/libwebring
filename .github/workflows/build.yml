@@ -24,7 +24,7 @@ jobs:
           auto-optimise: true
 
       - name: Build
-        run: rm -rf dist && ./build.ts
+        run: ./build.ts
 
       - name: Upload dist artifact
         uses: actions/upload-artifact@v2
