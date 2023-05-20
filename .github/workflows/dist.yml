@@ -27,6 +27,7 @@ jobs:
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          branch: dist
           file_pattern: dist
           commit_message: |
             Build to dist
