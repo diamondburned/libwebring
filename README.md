@@ -2,6 +2,10 @@
 
 A tiny JavaScript library for adding a webring to your website.
 
+<div align="center">
+  <img src=".github/screenshot.png" width="500px" />
+</div>
+
 ## Features
 
 - Vanilla JS with Web Components
