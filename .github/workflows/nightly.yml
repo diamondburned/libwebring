@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: write
-
 jobs:
   build:
     uses: ./.github/workflows/build.yml
@@ -25,18 +22,12 @@ jobs:
           name: dist
           path: dist
 
-      - name: Pack dist
-        run: tar -czf dist.tar.gz dist
-
-      - name: Update Nightly release
-        uses: andelf/nightly-release@ce2d0a30db8cf9f3920a4237d6a0b874400710c1
+      - name: Commit
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          name: Nightly Release
-          body: |
-            This is a nightly release of libwebring. It is built from the latest
-            commit on the `main` branch.
-          tag_name: nightly
-          prerelease: true
-          files: dist.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          branch: nightly
+          push_options: --force
+          skip_fetch: true
+          skip_checkout: true
+          create_branch: true
+          commit_message: Build nightly to ${{ github.sha }}
