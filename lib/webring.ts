@@ -242,7 +242,7 @@ export class WebringElement extends HTMLElement {
     });
 
     this.$<HTMLAnchorElement>(".ring", (a) => {
-      a.href = this.webring.data.root;
+      a.href = this.webring.data.root || this.webring.src;
       a.textContent = this.webring.data.name || "";
     });
 
