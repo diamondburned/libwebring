@@ -9,6 +9,10 @@
     "noFallthroughCasesInSwitch": true,
     "strict": false
   },
+  "imports": {
+    "#/": "./",
+    "std/": "https://deno.land/std@0.188.0/"
+  },
   "tasks": {
     "build": "deno run -A build.ts",
     "serve": "deno run -A https://deno.land/std@0.188.0/http/file_server.ts"

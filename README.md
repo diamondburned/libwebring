@@ -26,7 +26,7 @@ Add the script tag to your place. You may choose to use something like [jsdelivr
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/gh/diamondburned/libwebring@nightly/dist/webring.js"
+  src="https://cdn.jsdelivr.net/gh/diamondburned/libwebring@nightly/dist/webring-element.js"
   type="module"
 ></script>
 <link
