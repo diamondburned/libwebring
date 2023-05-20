@@ -1,0 +1,40 @@
+name: Build to Nightly
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
+  release:
+    name: Update Nightly
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Pull dist artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+
+      - name: Pack dist
+        run: tar -czf dist.tar.gz dist
+
+      - name: Release Nightly
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist.tar.gz
+          fail_on_unmatched_files: true
+          name: Nightly
+          body: |
+            This is a nightly release of libwebring. It is built from the latest
+            commit on the `main` branch.
+          prerelease: true
