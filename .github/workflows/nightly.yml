@@ -26,6 +26,8 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: nightly
+          file_pattern: dist
+          add_options: --force
           push_options: --force
           skip_fetch: true
           skip_checkout: true
