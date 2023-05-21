@@ -29,8 +29,7 @@ runs:
 
     - name: Run health check
       run: |
-        cd ${{ steps.env.outputs.root }}
-        ./cmd/health-check.ts \
+        ${{ steps.env.outputs.root }}/cmd/health-check.ts \
           -i ${{ inputs.webring-input }} \
           -o ${{ inputs.status-output }}
       shell: bash
