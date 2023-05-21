@@ -13,18 +13,23 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Go to action repository
-      run: pushd ${{ github.action_path }}/../../../ && ls -la && echo "why does this not work :sobbing:"
+    - name: Initialize environment
+      id: env
       shell: bash
+      run: |
+        echo "root=${ACTION_PATH%%.github*}" >> $GITHUB_OUTPUT
+      env:
+        ACTION_PATH: ${{ github.action_path }}
 
     - name: Install Nix dependencies
       uses: diamondburned/cache-install@main
       with:
-        shell-file: shell.nix
+        shell-file: ${{ steps.env.outputs.root }}/shell.nix
         auto-optimise: true
 
     - name: Run health check
       run: |
+        cd ${{ steps.env.outputs.root }}
         ./cmd/health-check.ts \
           -i ${{ inputs.webring-input }} \
           -o ${{ inputs.status-output }}
