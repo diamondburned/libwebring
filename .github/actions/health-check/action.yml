@@ -13,19 +13,23 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Go to action repository
-      run: pushd ${{ github.action_path }}/../../../
+    - name: Initialize environment
+      id: env
       shell: bash
+      run: |
+        echo "root=${ACTION_PATH%%.github*}" >> $GITHUB_OUTPUT
+      env:
+        ACTION_PATH: ${{ github.action_path }}
 
     - name: Install Nix dependencies
       uses: diamondburned/cache-install@main
       with:
-        shell-file: shell.nix
+        shell-file: ${{ steps.env.outputs.root }}/shell.nix
         auto-optimise: true
 
     - name: Run health check
       run: |
-        ./cmd/health-check.ts \
+        ${{ steps.env.outputs.root }}/cmd/health-check.ts \
           -i ${{ inputs.webring-input }} \
           -o ${{ inputs.status-output }}
       shell: bash
@@ -35,7 +39,3 @@ runs:
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: ${{ inputs.commit-message }}
-
-    - name: Restore current directory
-      run: popd
-      shell: bash
