@@ -14,7 +14,7 @@ runs:
   using: composite
   steps:
     - name: Go to action repository
-      run: pushd ${{ github.action_path }}/../../../
+      run: pushd ${{ github.action_path }}/../../../ && ls -la && echo "why does this not work :sobbing:"
       shell: bash
 
     - name: Install Nix dependencies
