@@ -9,27 +9,33 @@ inputs:
     default: false
   commit-message:
     default: "Update webring status file"
-  action-path: # do not set this
-    default: ${{ github.action_path }}/../../
 
 runs:
   using: composite
   steps:
+    - name: Go to action repository
+      run: pushd ${{ github.action_path }}/../../
+      shell: bash
+
     - name: Install Nix dependencies
       uses: diamondburned/cache-install@main
       with:
-        shell-file: ${{ inputs.action-path }}/shell.nix
+        shell-file: shell.nix
         auto-optimise: true
 
     - name: Run health check
-      shell: bash
       run: |
-        ${{ inputs.action-path }}/cmd/health-check.ts \
+        ./cmd/health-check.ts \
           -i ${{ inputs.webring-input }} \
           -o ${{ inputs.status-output }}
+      shell: bash
 
     - name: Commit changes
       if: ${{ inputs.commit }}
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: ${{ inputs.commit-message }}
+
+    - name: Restore current directory
+      run: popd
+      shell: bash
