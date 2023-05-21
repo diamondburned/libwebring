@@ -9,6 +9,8 @@ inputs:
     default: false
   commit-message:
     default: "Update webring status file"
+  action-path: # do not set this
+    default: ${{ github.action_path }}/../../
 
 runs:
   using: composite
@@ -16,13 +18,13 @@ runs:
     - name: Install Nix dependencies
       uses: diamondburned/cache-install@main
       with:
-        shell-file: ${{ github.action_path }}/shell.nix
+        shell-file: ${{ inputs.action-path }}/shell.nix
         auto-optimise: true
 
     - name: Run health check
       shell: bash
       run: |
-        ${{ github.action_path }}/cmd/health-check.ts \
+        ${{ inputs.action-path }}/cmd/health-check.ts \
           -i ${{ inputs.webring-input }} \
           -o ${{ inputs.status-output }}
 
