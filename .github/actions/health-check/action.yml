@@ -28,6 +28,7 @@ runs:
       shell: bash
       run: |
         echo "root=${ACTION_PATH%%.github*}" >> $GITHUB_OUTPUT
+        echo "NIXPKGS_ALLOW_UNFREE=1" >> $GITHUB_ENV
       env:
         ACTION_PATH: ${{ github.action_path }}
 
