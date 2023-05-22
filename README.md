@@ -22,6 +22,8 @@ A tiny JavaScript library for adding a webring to your website.
 
 ## Usage
 
+### Browser
+
 Add the script tag to your place. You may choose to use something like [jsdelivr](https://jsdelivr.com/) for this:
 
 ```html
@@ -51,7 +53,30 @@ Make sure that your webring JSON either has the top-most domain name of your cur
 <webring-element name="diamond" src="/path/to/webring.json" />
 ```
 
-### Example
+### NodeJS
+
+To install this as a package in NodeJS, run:
+
+```sh
+npm i diamondburned/libwebring#nightly
+```
+
+**Note**: You have to have `"type": "module"` in your `package.json` for this to work.
+
+Then, import the module:
+
+```js
+import "libwebring/dist/webring-element.js";
+import "libwebring/dist/webring.css";
+```
+
+Then, add the `<webring-element>` tag:
+
+```html
+<webring-element src="/path/to/webring.json" />
+```
+
+## Example
 
 To run the example, run
 

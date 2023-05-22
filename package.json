@@ -8,7 +8,7 @@
     "build": "deno run -A build.ts",
     "serve": "deno run -A https://deno.land/std@0.188.0/http/file_server.ts"
   },
-  "homepage": "https://libdb.so/libwebring",
+  "repository": "github:diamondburned/libwebring",
   "author": "diamondburned",
   "license": "ISC"
 }
