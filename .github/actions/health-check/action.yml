@@ -5,6 +5,16 @@ inputs:
     default: webring.json
   status-output:
     default: "" # webring.json -> webring.status.json
+  scrape-for-webring-src:
+    default: ""
+    description: |
+      If non-empty, all sites will be scraped for the webring source.
+      This is used to check for the missingWebring property.
+  scrape-timeout:
+    default: 2000
+    description: |
+      The timeout for scraping a site, in milliseconds.
+      Only used if scrape-for-webring-src is non-empty.
   commit:
     default: false
   commit-message:
@@ -21,21 +31,26 @@ runs:
       env:
         ACTION_PATH: ${{ github.action_path }}
 
-    - name: Install Nix dependencies
-      uses: diamondburned/cache-install@main
+    - uses: diamondburned/cache-install@main
       with:
-        shell-file: ${{ steps.env.outputs.root }}/shell.nix
+        key-prefix: nix-libwebring-health-check-
+        shell-file: ${{ steps.env.outputs.root }}/cmd/health-check-v2/shell.nix
         auto-optimise: true
 
-    - name: Run health check
-      run: |
-        ${{ steps.env.outputs.root }}/cmd/health-check.ts \
-          -i ${{ inputs.webring-input }} \
-          -o ${{ inputs.status-output }}
+    - run: |
+        ${{ steps.env.outputs.root }}/cmd/health-check-v2/main.ts \
+          -i "$webring_input" \
+          -o "$status_output" \
+          --scrape-for-webring-src "$scrape_for_webring_src" \
+          --scrape-timeout "$scrape_timeout"
       shell: bash
+      env:
+        webring_input: ${{ inputs.webring-input }}
+        status_output: ${{ inputs.status-output }}
+        scrape_for_webring_src: ${{ inputs.scrape-for-webring-src }}
+        scrape_timeout: ${{ inputs.scrape-timeout }}
 
-    - name: Commit changes
+    - uses: stefanzweifel/git-auto-commit-action@v4
       if: ${{ inputs.commit }}
-      uses: stefanzweifel/git-auto-commit-action@v4
       with:
         commit_message: ${{ inputs.commit-message }}
