@@ -86,6 +86,10 @@ deno task serve
 
 Then head to http://localhost:4507/example/.
 
+## Hosting a webring
+
+To see how a webring is hosted, see [diamondburned/acmfriends-webring](https://github.com/diamondburned/acmfriends-webring/).
+
 ## Customizing
 
 If `<webring-element>` is used without any children, it will generate a default HTML template to be used as the body. If it has existing children elements, then they will be kept.
