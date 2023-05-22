@@ -12,6 +12,7 @@ const scssFile = await Deno.readTextFile("lib/webring.scss");
 // Probably never lmfao. They couldn't even be bothered to wrap the functions?
 const css = sass(scssFile, { style: "compressed" }).to_string() as string;
 await Deno.writeTextFile("dist/webring.css", css);
+await Deno.symlink("dist/webring.css", "dist/webring-element.css");
 
 await esbuild.build({
   plugins: [
@@ -23,6 +24,7 @@ await esbuild.build({
   entryPoints: ["lib/webring-element.ts", "lib/webring.ts"],
   outdir: "dist",
   format: "esm",
+  target: ["es2020", "chrome80", "firefox80", "node16"],
   bundle: true,
   minify: true,
   sourcemap: true,
