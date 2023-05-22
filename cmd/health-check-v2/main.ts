@@ -57,16 +57,16 @@ const dataFile = await Deno.readTextFile(webringInput);
 const data = JSON.parse(dataFile) as WebringData;
 
 const scrapeForWebringSrc = args["scrape-for-webring-src"] as string;
-const scrapeTimeout = Number(args["scrape-timeout"] || 2000);
-const scraper: Scraper | null = scrapeForWebringSrc ? new Scraper() : null;
+const scrapeTimeout = Number(args["scrape-timeout"] || 10000);
+const scraper: Scraper | null = scrapeForWebringSrc
+  ? new Scraper(scrapeTimeout)
+  : null;
 
 const statuses: (WebringLinkStatus | null)[] = await Promise.all(
   data.ring.map(async (link) => {
     const url = link.link.includes("://") ? link.link : `https://${link.link}`;
     if (scrapeForWebringSrc) {
-      const result = await scraper.scrapeForWebring(url, scrapeForWebringSrc, {
-        timeout: scrapeTimeout,
-      });
+      const result = await scraper.scrapeForWebring(url, scrapeForWebringSrc);
       switch (result) {
         case Result.OK:
           return null;

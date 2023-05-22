@@ -11,7 +11,7 @@ inputs:
       If non-empty, all sites will be scraped for the webring source.
       This is used to check for the missingWebring property.
   scrape-timeout:
-    default: 2000
+    default: 10000
     description: |
       The timeout for scraping a site, in milliseconds.
       Only used if scrape-for-webring-src is non-empty.
