@@ -1,5 +1,3 @@
-#!/usr/bin/env -S deno run -A
-
 export async function checkAlive(url: string): Promise<boolean> {
   try {
     const resp = await fetch(url);
