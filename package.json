@@ -1,0 +1,14 @@
+{
+  "name": "libwebring",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "A tiny JavaScript library for adding a webring to your website.",
+  "browser": "dist/webring-element.js",
+  "scripts": {
+    "build": "deno run -A build.ts",
+    "serve": "deno run -A https://deno.land/std@0.188.0/http/file_server.ts"
+  },
+  "homepage": "https://libdb.so/libwebring",
+  "author": "diamondburned",
+  "license": "ISC"
+}
