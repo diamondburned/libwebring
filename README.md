@@ -8,14 +8,12 @@ A tiny JavaScript library for adding a webring to your website.
 
 ## Features
 
-- Vanilla JS with Web Components
+- Vanilla JS with Web Components and Svlete support
 - No backend needed, just a simple raw GitHub link
 - Periodic health checking using GitHub Actions
 
 ### Goals
 
-- Planned JS frameworks support
-  - Svelte
 - Be cute
 - Look cute
 - Low maintenance
@@ -53,26 +51,24 @@ Make sure that your webring JSON either has the top-most domain name of your cur
 <webring-element name="diamond" src="/path/to/webring.json" />
 ```
 
-### NodeJS
+### Svelte
 
-To install this as a package in NodeJS, run:
+To use libwebring in Svelte, first install the package:
 
 ```sh
-npm i diamondburned/libwebring#nightly
+npm i 'diamondburned/libwebring#nightly'
 ```
 
 **Note**: You have to have `"type": "module"` in your `package.json` for this to work.
 
-Then, import the module:
+Then, import the module and add the `<webring-element>` tag:
 
-```js
-import "libwebring/dist/webring-element.js";
-import "libwebring/dist/webring.css";
-```
+```svelte
+<script>
+  import "libwebring/dist/webring-element.js";
+  import "libwebring/dist/webring.css";
+</script>
 
-Then, add the `<webring-element>` tag:
-
-```html
 <webring-element src="/path/to/webring.json" />
 ```
 

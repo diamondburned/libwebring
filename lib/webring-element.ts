@@ -2,26 +2,78 @@ import { html } from "https://deno.land/x/literal_html@1.1.0/mod.ts";
 import { Webring, WebringLink } from "./webring.ts";
 
 export class WebringElement extends HTMLElement {
-  readonly webring: Webring;
+  webring: Webring;
 
   constructor() {
     super();
+  }
 
-    const src = this.attributes["src"]?.value;
-    if (!src) {
+  connectedCallback() {
+    this.init();
+  }
+
+  // update asynchronously updates the webring data and re-renders the element.
+  update() {
+    this.webring.update().then(() => this.render());
+  }
+
+  get src(): string {
+    return this.attributes["src"]?.value;
+  }
+
+  set src(src: string) {
+    this.setAttribute("src", src);
+    this.init();
+  }
+
+  get name(): string {
+    return this.attributes["name"]?.value;
+  }
+
+  set name(name: string) {
+    this.setAttribute("name", name);
+    this.init();
+  }
+
+  get statusSrc(): string {
+    return this.attributes["status-src"]?.value;
+  }
+
+  set statusSrc(statusSrc: string) {
+    this.setAttribute("status-src", statusSrc);
+    this.init();
+  }
+
+  get excludeMissingWebringSites(): boolean {
+    return this.attributes["exclude-missing-webring-sites"]?.value != null;
+  }
+
+  set excludeMissingWebringSites(excludeMissingWebringSites: boolean) {
+    if (excludeMissingWebringSites) {
+      this.setAttribute("exclude-missing-webring-sites", "");
+    } else {
+      this.removeAttribute("exclude-missing-webring-sites");
+    }
+    this.init();
+  }
+
+  private init() {
+    if (!this.src) {
       console.error("Not rendering webring: missing src attribute");
       this.setVisible(false);
       return;
     }
 
-    this.webring = new Webring(src, {
-      name: this.attributes["name"]?.value,
-      statusSrc: this.attributes["status-src"]?.value,
-      excludeMissingWebringSites: this.hasAttribute(
-        "exclude-missing-webring-sites"
-      ),
+    this.webring = new Webring(this.src, {
+      name: this.name,
+      statusSrc: this.statusSrc,
+      excludeMissingWebringSites: this.excludeMissingWebringSites,
     });
 
+    this.update();
+  }
+
+  private render() {
     if (elementIsEmpty(this)) {
       this.innerHTML = html`
         <p class="ring-info">
@@ -34,24 +86,17 @@ export class WebringElement extends HTMLElement {
         </p>
       `;
     }
-  }
 
-  connectedCallback() {
-    this.update();
-  }
-
-  // update asynchronously updates the webring data and re-renders the element.
-  update() {
-    this.webring.update().then(() => this.render());
-  }
-
-  private render() {
     for (const k in this.dataset) {
       delete this.dataset[k];
     }
 
     const surroundingLinks = this.webring.surroundingLinks();
     if (!surroundingLinks) {
+      console.warn(
+        "Not rendering webring: no surrounding links found " +
+          "(maybe you're not in the ring?)"
+      );
       this.setVisible(false);
       return;
     }
@@ -93,6 +138,10 @@ export class WebringElement extends HTMLElement {
       throw new Error(`Element not found: ${selector}`);
     }
     f(el as T);
+  }
+
+  private stringAttribute(name: string): string {
+    return this.attributes[name]?.value || "";
   }
 }
 
