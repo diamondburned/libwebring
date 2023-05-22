@@ -32,9 +32,10 @@ export class Webring {
       statusSrc?: string;
       data?: WebringData;
       statusData?: WebringStatusData;
-      // excludeMissingWebringSites returns true if sites that don't have a
-      // webring link should be excluded from the webring. readonly
-      excludeMissingWebringSites?: boolean;
+      // includeMissingWebringSites is true if sites that don't have a
+      // webring link should be included from the webring.
+      // This field is not always effective. See README for details.
+      includeMissingWebringSites?: boolean;
     }
   ) {
     this.#data = opts.data || null;
@@ -107,7 +108,7 @@ export class Webring {
         if (anomaly.dead) {
           return false;
         }
-        if (this.opts.excludeMissingWebringSites && anomaly.missingWebring) {
+        if (anomaly.missingWebring && !this.opts.includeMissingWebringSites) {
           return false;
         }
       }

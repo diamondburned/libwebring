@@ -98,15 +98,17 @@ libwebring will look for the following classes to fill in the data:
 - `.middle` for the name of the current link
 - `.right` for the right link (assumed to be an `<a>` tag)
 
-To exclude websites that don't show the same webring, you can use the `exclude-missing-webring-sites` attribute:
+To include websites that don't show the same webring, you can use the `include-missing-webring-sites` attribute:
 
 ```html
 <webring-element
   name="diamond"
   src="/path/to/webring.json"
-  exclude-missing-webring-sites
+  include-missing-webring-sites
 />
 ```
+
+Note that in order for sites with missing webrings to be detected in the first place, the `missingWebring` fields of the `webring.status.json` file must be populated. To do this, consider using the `.github/actions/health-check` action with a non-empty `scrape-for-webring-src` attribute.
 
 By default, libwebring will assume that there is also a status JSON file next to the webring source JSON file. For example, if the webring source file is `webring`, then `webring.status.json` will also be checked.
 

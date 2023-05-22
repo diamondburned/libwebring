@@ -44,15 +44,15 @@ export class WebringElement extends HTMLElement {
     this.init();
   }
 
-  get excludeMissingWebringSites(): boolean {
-    return this.attributes["exclude-missing-webring-sites"]?.value != null;
+  get includeMissingWebringSites(): boolean {
+    return this.attributes["include-missing-webring-sites"]?.value != null;
   }
 
-  set excludeMissingWebringSites(excludeMissingWebringSites: boolean) {
-    if (excludeMissingWebringSites) {
-      this.setAttribute("exclude-missing-webring-sites", "");
+  set includeMissingWebringSites(includeMissingWebringSites: boolean) {
+    if (includeMissingWebringSites) {
+      this.setAttribute("include-missing-webring-sites", "");
     } else {
-      this.removeAttribute("exclude-missing-webring-sites");
+      this.removeAttribute("include-missing-webring-sites");
     }
     this.init();
   }
@@ -67,7 +67,7 @@ export class WebringElement extends HTMLElement {
     this.webring = new Webring(this.src, {
       name: this.name,
       statusSrc: this.statusSrc,
-      excludeMissingWebringSites: this.excludeMissingWebringSites,
+      includeMissingWebringSites: this.includeMissingWebringSites,
     });
 
     this.update();
