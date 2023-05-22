@@ -77,6 +77,7 @@ Then, import the module and add the `<webring-element>` tag:
 To run the example, run
 
 ```sh
+deno task build
 deno task serve
 ```
 
