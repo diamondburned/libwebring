@@ -51,13 +51,13 @@ Options:
 
 const webringInput = args["webring-input"] as string;
 const statusOutput =
-  (args["status-output"] as string) ?? guessStatusSrc(webringInput);
+  (args["status-output"] as string) || guessStatusSrc(webringInput);
 
 const dataFile = await Deno.readTextFile(webringInput);
 const data = JSON.parse(dataFile) as WebringData;
 
 const scrapeForWebringSrc = args["scrape-for-webring-src"] as string;
-const scrapeTimeout = Number(args["scrape-timeout"] ?? 2000);
+const scrapeTimeout = Number(args["scrape-timeout"] || 2000);
 const scraper: Scraper | null = scrapeForWebringSrc ? new Scraper() : null;
 
 const statuses: (WebringLinkStatus | null)[] = await Promise.all(
