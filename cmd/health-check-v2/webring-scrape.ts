@@ -1,4 +1,4 @@
-import * as puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
+import * as puppeteer from "https://raw.githubusercontent.com/diamondburned/deno-puppeteer/e41b8900b46dc2d1764aa0571aff400c29b7dab4/mod.ts";
 
 export enum Result {
   OK,
