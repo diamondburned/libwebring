@@ -26,19 +26,18 @@ export class Webring {
   #statusData: WebringStatusData | null = null;
 
   constructor(
-    readonly src: string,
+    readonly src: string | WebringData,
     readonly opts: {
       name?: string; // override the name of the link to use
       statusSrc?: string;
-      data?: WebringData;
       statusData?: WebringStatusData;
       // includeMissingWebringSites is true if sites that don't have a
       // webring link should be included from the webring.
       // This field is not always effective. See README for details.
       includeMissingWebringSites?: boolean;
-    }
+    },
   ) {
-    this.#data = opts.data || null;
+    this.#data = typeof src === "object" ? src : null;
     this.#statusData = opts.statusData || null;
   }
 
@@ -73,7 +72,13 @@ export class Webring {
   }
 
   get statusSrc(): string {
-    return this.opts.statusSrc || guessStatusSrc(this.src);
+    if (this.opts.statusSrc) {
+      return this.opts.statusSrc;
+    }
+    if (typeof this.src === "string") {
+      return guessStatusSrc(this.src);
+    }
+    return "";
   }
 
   get statusData(): WebringStatusData {
@@ -132,16 +137,20 @@ export class Webring {
     }
   }
 
-  private async initData(src: string) {
-    const response = await fetch(src);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch webring data: ${response.status}`);
+  private async initData(src: string | WebringData) {
+    if (typeof src === "object") {
+      this.#data = src;
+    } else {
+      const response = await fetch(src);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch webring data: ${response.status}`);
+      }
+      this.#data = await response.json();
     }
 
-    this.#data = await response.json();
     if (this.#data.version != 1) {
       throw new Error(
-        `Unsupported webring format version: ${this.#data.version}`
+        `Unsupported webring format version: ${this.#data.version}`,
       );
     }
   }
@@ -170,7 +179,7 @@ export class Webring {
       }
       default: {
         throw new Error(
-          `Unsupported status format version: ${this.#statusData.version}`
+          `Unsupported status format version: ${this.#statusData.version}`,
         );
       }
     }
@@ -180,7 +189,7 @@ export class Webring {
 // domainIncludes returns true if matchingDomain is a subdomain of domain.
 export function domainIncludes(
   domain: string,
-  matchingDomain: string
+  matchingDomain: string,
 ): boolean {
   return domain == matchingDomain || matchingDomain.endsWith(`.${domain}`);
 }

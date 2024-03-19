@@ -1,5 +1,5 @@
 import { html } from "https://deno.land/x/literal_html@1.1.0/mod.ts";
-import { Webring, WebringLink } from "./webring.ts";
+import { Webring, type WebringData, type WebringLink } from "./webring.ts";
 
 export class WebringElement extends HTMLElement {
   webring: Webring;
@@ -35,6 +35,16 @@ export class WebringElement extends HTMLElement {
     this.init();
   }
 
+  get data(): string {
+    return this.attributes["data"]?.value;
+  }
+
+  set data(data: string | WebringData) {
+    const str = typeof data === "string" ? data : JSON.stringify(data);
+    this.setAttribute("data", str);
+    this.init();
+  }
+
   get statusSrc(): string {
     return this.attributes["status-src"]?.value;
   }
@@ -58,13 +68,24 @@ export class WebringElement extends HTMLElement {
   }
 
   private init() {
-    if (!this.src) {
-      console.error("Not rendering webring: missing src attribute");
+    try {
+      if (!this.src && !this.data) {
+        throw new Error("missing src or data attribute");
+      }
+      if (this.src && this.data) {
+        throw new Error("both src and data attributes are set");
+      }
+      if (this.data && !JSON.parse(this.data)) {
+        throw new Error("invalid JSON in data attribute");
+      }
+    } catch (e) {
+      console.error("Not rendering webring:", e);
       this.setVisible(false);
       return;
     }
 
-    this.webring = new Webring(this.src, {
+    const src = this.data ? (JSON.parse(this.data) as WebringData) : this.src;
+    this.webring = new Webring(src, {
       name: this.name,
       statusSrc: this.statusSrc,
       includeMissingWebringSites: this.includeMissingWebringSites,
@@ -95,7 +116,7 @@ export class WebringElement extends HTMLElement {
     if (!surroundingLinks) {
       console.warn(
         "Not rendering webring: no surrounding links found " +
-          "(maybe you're not in the ring?)"
+          "(maybe you're not in the ring?)",
       );
       this.setVisible(false);
       return;
@@ -112,7 +133,9 @@ export class WebringElement extends HTMLElement {
     });
 
     this.$<HTMLAnchorElement>(".ring", (a) => {
-      a.href = this.webring.data.root || this.webring.src;
+      a.href =
+        this.webring.data.root ||
+        (typeof this.src === "string" ? this.src : "");
       a.textContent = this.webring.data.name || "";
     });
 
@@ -138,10 +161,6 @@ export class WebringElement extends HTMLElement {
       throw new Error(`Element not found: ${selector}`);
     }
     f(el as T);
-  }
-
-  private stringAttribute(name: string): string {
-    return this.attributes[name]?.value || "";
   }
 }
 

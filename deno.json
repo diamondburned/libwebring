@@ -1,16 +1,10 @@
 {
   "compilerOptions": {
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "deno.window"
-    ],
+    "lib": ["esnext", "dom", "dom.iterable", "deno.window"],
     "noFallthroughCasesInSwitch": true,
     "strict": false
   },
   "imports": {
-    "#/": "./",
     "std/": "https://deno.land/std@0.188.0/"
   },
   "tasks": {
