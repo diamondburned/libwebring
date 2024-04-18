@@ -4,6 +4,12 @@ import { Webring, type WebringData, type WebringLink } from "./webring.ts";
 export class WebringElement extends HTMLElement {
   webring: Webring;
 
+  src?: string;
+  name?: string;
+  data?: WebringData;
+  statusSrc?: string;
+  includeMissingWebringSites = false;
+
   constructor() {
     super();
   }
@@ -12,59 +18,55 @@ export class WebringElement extends HTMLElement {
     this.init();
   }
 
+  // Add new attributes to this array so that attributeChangedCallback is called
+  // when any of them change.
+  static observedAttributes = [
+    "src",
+    "data",
+    "name",
+    "status-src",
+    "include-missing-webring-sites",
+  ];
+
+  attributeChangedCallback(name: string, oldValue?: string, newValue?: string) {
+    if (oldValue === newValue) {
+      return;
+    }
+
+    switch (name) {
+      case "src":
+        this.src = newValue || undefined;
+        break;
+      case "data":
+        try {
+          this.data = newValue ? JSON.parse(newValue) : undefined;
+        } catch (cause) {
+          this.error(cause);
+          return;
+        }
+        break;
+      case "name":
+        this.name = newValue || undefined;
+        break;
+      case "status-src":
+        this.statusSrc = newValue || undefined;
+        break;
+      case "include-missing-webring-sites":
+        this.includeMissingWebringSites = ["true", "1"].includes(newValue);
+        break;
+    }
+
+    this.init();
+  }
+
   // update asynchronously updates the webring data and re-renders the element.
   update() {
     this.webring.update().then(() => this.render());
   }
 
-  get src(): string {
-    return this.attributes["src"]?.value;
-  }
-
-  set src(src: string) {
-    this.setAttribute("src", src);
-    this.init();
-  }
-
-  get name(): string {
-    return this.attributes["name"]?.value;
-  }
-
-  set name(name: string) {
-    this.setAttribute("name", name);
-    this.init();
-  }
-
-  get data(): string {
-    return this.attributes["data"]?.value;
-  }
-
-  set data(data: string | WebringData) {
-    const str = typeof data === "string" ? data : JSON.stringify(data);
-    this.setAttribute("data", str);
-    this.init();
-  }
-
-  get statusSrc(): string {
-    return this.attributes["status-src"]?.value;
-  }
-
-  set statusSrc(statusSrc: string) {
-    this.setAttribute("status-src", statusSrc);
-    this.init();
-  }
-
-  get includeMissingWebringSites(): boolean {
-    return this.attributes["include-missing-webring-sites"]?.value != null;
-  }
-
-  set includeMissingWebringSites(includeMissingWebringSites: boolean) {
-    if (includeMissingWebringSites) {
-      this.setAttribute("include-missing-webring-sites", "");
-    } else {
-      this.removeAttribute("include-missing-webring-sites");
-    }
-    this.init();
+  private error(e: unknown) {
+    console.error("Not rendering webring:", e);
+    this.setVisible(false);
   }
 
   private init() {
@@ -75,16 +77,12 @@ export class WebringElement extends HTMLElement {
       if (this.src && this.data) {
         throw new Error("both src and data attributes are set");
       }
-      if (this.data && !JSON.parse(this.data)) {
-        throw new Error("invalid JSON in data attribute");
-      }
     } catch (e) {
-      console.error("Not rendering webring:", e);
-      this.setVisible(false);
+      this.error(e);
       return;
     }
 
-    const src = this.data ? (JSON.parse(this.data) as WebringData) : this.src;
+    const src = this.data ?? this.src;
     this.webring = new Webring(src, {
       name: this.name,
       statusSrc: this.statusSrc,
