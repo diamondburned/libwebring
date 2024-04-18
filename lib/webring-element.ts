@@ -64,21 +64,23 @@ export class WebringElement extends HTMLElement {
     this.webring.update().then(() => this.render());
   }
 
-  private error(e: unknown) {
-    console.error("Not rendering webring:", e);
+  private error(e: unknown, nonError = false) {
+    if (nonError) {
+      console.debug("Not rendering webring:", e);
+    } else {
+      console.error("Not rendering webring:", e);
+    }
     this.setVisible(false);
   }
 
   private init() {
-    try {
-      if (!this.src && !this.data) {
-        throw new Error("missing src or data attribute");
-      }
-      if (this.src && this.data) {
-        throw new Error("both src and data attributes are set");
-      }
-    } catch (e) {
-      this.error(e);
+    if (!this.src && !this.data) {
+      this.error("missing src or data attribute", true);
+      return;
+    }
+
+    if (this.src && this.data) {
+      this.error("both src and data attributes are set");
       return;
     }
 
