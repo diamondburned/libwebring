@@ -71,14 +71,14 @@ export class Webring {
     this.initLink();
   }
 
-  get statusSrc(): string {
+  get statusSrc(): string | undefined {
     if (this.opts.statusSrc) {
       return this.opts.statusSrc;
     }
     if (typeof this.src === "string") {
       return guessStatusSrc(this.src);
     }
-    return "";
+    return undefined;
   }
 
   get statusData(): WebringStatusData {
@@ -129,10 +129,12 @@ export class Webring {
     }
 
     if (!this.#statusData) {
-      try {
-        await this.initStatusData(this.statusSrc);
-      } catch (err) {
-        console.error("Failed to fetch status data", err);
+      if (this.statusSrc) {
+        try {
+          await this.initStatusData(this.statusSrc);
+        } catch (err) {
+          console.error("Failed to fetch status data", err);
+        }
       }
     }
   }
